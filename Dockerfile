@@ -1,9 +1,16 @@
 FROM node:6.11-alpine
 
+# UPGRADE
+RUN apk update && apk upgrade
+
 # INSTALL GIT
 
-RUN apk update && apk upgrade && \
-    apk add --no-cache bash git openssh
+RUN apk add --no-cache bash git openssh
+
+# INSTALL JQ
+
+RUN apk add jq && \
+    rm -rf /var/cache/apk/*
 
 # INSTALL PHP5-CLI
 
@@ -13,9 +20,7 @@ ENV MAX_UPLOAD          50M
 ENV PHP_MAX_FILE_UPLOAD 200
 ENV PHP_MAX_POST        100M
 
-RUN apk update && \
-    apk upgrade && \
-    apk add --update tzdata && \
+RUN apk add --update tzdata && \
     cp /usr/share/zoneinfo/${TIMEZONE} /etc/localtime && \
     echo "${TIMEZONE}" > /etc/timezone && \
     apk add --update \
